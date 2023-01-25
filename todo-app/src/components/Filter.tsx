@@ -13,12 +13,19 @@ export const Filter = (props) => {
 
   return (
     <div className="panel-tabs">
-      <a
+      {/* <a
         href="#"
         onClick={handleClick.bind(null, "ALL")}
         className={classNames({ "is-active": value === "ALL" })}
       >
         全て
+      </a> */}
+      <a
+        href="#"
+        onClick={handleClick.bind(null, "NOTSTARTED")}
+        className={classNames({ "is-active": value === "NOTSTARTED" })}
+      >
+        未着手
       </a>
       <a
         href="#"
@@ -29,10 +36,10 @@ export const Filter = (props) => {
       </a>
       <a
         href="#"
-        onClick={handleClick.bind(null, "TODO")}
-        className={classNames({ "is-active": value === "TODO" })}
+        onClick={handleClick.bind(null, "INPROGRESS")}
+        className={classNames({ "is-active": value === "INPROGRESS" })}
       >
-        進行中
+        着手中
       </a>
       <a
         href="#"

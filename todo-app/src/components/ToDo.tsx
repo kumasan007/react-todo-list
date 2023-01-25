@@ -2,23 +2,29 @@ import classNames from "classnames"
 import "bulma/css/bulma.css"
 
 export const ToDo = (props) => {
-  // stateを作成
+  // state作成
   const { todo, onCheck } = props
 
-  // チェックボックス押下時、ToDoAppクラスの「handleCheck」関数を実行
-  const handleChange = () => {
-    onCheck(todo)
+  const handleChange = (event) => {
+    onCheck({ ...todo, status: event.target.value })
   }
 
   return (
     <label className="panel-block">
-      <input type="checkbox" checked={todo.done} onChange={handleChange} />
+      <div className="select">
+        <select value={todo.status} onChange={handleChange}>
+          <option value="NOTSTARTED">未着手</option>
+          <option value="INPROGRESS">着手中</option>
+          <option value="DONE">完了</option>
+        </select>
+      </div>
       <span
         className={classNames({
-          "has-text-grey-light": todo.done,
+          "has-text-grey-light": todo.status === "DONE",
         })}
       >
         {todo.text}
+        {todo.deadline && todo.deadline.toString()}
       </span>
     </label>
   )
