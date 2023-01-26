@@ -1,13 +1,15 @@
 import React, { useState } from "react"
 import "bulma/css/bulma.css"
-import { Dayjs } from "dayjs"
+import dayjs from "dayjs"
+import ja from "dayjs/locale/ja"
+dayjs.locale(ja)
 import TextField from "@mui/material/TextField"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import { Button, Stack } from "@mui/material"
 import "./InputToDo.css"
-
+dayjs.locale(ja)
 export const InputToDo = (props) => {
   // stateを作成
   const [text, setText] = useState("")
@@ -39,10 +41,11 @@ export const InputToDo = (props) => {
           onChange={handleChange}
           onKeyPress={handleEnter}
         />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ja">
           <DatePicker
-            label="年/月/日"
+            label="期限(任意)"
             value={deadline}
+            inputFormat="YYYY-MM-DD"
             onChange={(newDeadline) => {
               setDeadline(newDeadline.format("YYYY-MM-DD"))
             }}
