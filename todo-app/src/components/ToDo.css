@@ -1,0 +1,8 @@
+.todo-deadline {
+  position: absolute;
+  right: 2rem;
+}
+
+.todo-text {
+  margin-left: 2rem;
+}

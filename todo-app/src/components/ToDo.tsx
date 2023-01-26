@@ -1,5 +1,6 @@
 import classNames from "classnames"
 import "bulma/css/bulma.css"
+import "./ToDo.css"
 
 export const ToDo = (props) => {
   // state作成
@@ -23,8 +24,12 @@ export const ToDo = (props) => {
           "has-text-grey-light": todo.status === "DONE",
         })}
       >
-        {todo.text}
-        {todo.deadline && todo.deadline.toString()}
+        <div className="todo-text" style={{ float: "left" }}>
+          {todo.text}
+        </div>
+        <div className="todo-deadline" style={{ float: "right" }}>
+          {todo.deadline && todo.deadline.toString()}
+        </div>
       </span>
     </label>
   )

@@ -25,11 +25,12 @@ export const ToDoApp = () => {
 
   // フィルターに応じたToDoを表示
   const displayToDos = todos.filter((todo) => {
+    if (todo.deadline) {
+      todo.status = "DEADLINE"
+    }
     if (filter === "ALL") return todo
     if (filter === "NOTSTARTED") return todo.status === "NOTSTARTED"
-    // if (filter === "DEADLINE"){
-    //   if(todo.dealine === "INPROGRESS" )
-    // }
+    if (filter === "DEADLINE") return todo.status === "DEADLINE"
     if (filter === "INPROGRESS") return todo.status === "INPROGRESS"
     if (filter === "DONE") return todo.status === "DONE"
   })
