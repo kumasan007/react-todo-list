@@ -16,7 +16,13 @@ export const ToDoApp = () => {
   const handleAdd = (text, deadline) => {
     setToDos([
       ...todos,
-      { key: getKey(), text, deadline, status: "NOTSTARTED" },
+      {
+        key: getKey(),
+        text,
+        deadline,
+        status: "NOTSTARTED",
+        deadlineStatus: false,
+      },
     ])
   }
 
@@ -26,11 +32,10 @@ export const ToDoApp = () => {
   // フィルターに応じたToDoを表示
   const displayToDos = todos.filter((todo) => {
     if (todo.deadline) {
-      todo.status = "DEADLINE"
+      todo.deadlineStatus = true
     }
-    if (filter === "ALL") return todo
     if (filter === "NOTSTARTED") return todo.status === "NOTSTARTED"
-    if (filter === "DEADLINE") return todo.status === "DEADLINE"
+    if (filter === "DEADLINE") return todo.deadlineStatus === true
     if (filter === "INPROGRESS") return todo.status === "INPROGRESS"
     if (filter === "DONE") return todo.status === "DONE"
   })
