@@ -3,6 +3,8 @@ import "bulma/css/bulma.css"
 import InputToDo from "./InputToDo"
 import Filter from "./Filter"
 import ToDo from "./ToDo"
+import { Button } from "@mui/material"
+import "./ToDoApp.css"
 // import { InputToDo, Filter, ToDo } from "./index"
 
 export const ToDoApp = () => {
@@ -18,6 +20,7 @@ export const ToDoApp = () => {
       ...todos,
       {
         key: getKey(),
+        createdAt: new Date(),
         text,
         deadline,
         status: "NOTSTARTED",
@@ -51,10 +54,66 @@ export const ToDoApp = () => {
     setToDos(newToDos)
   }
 
+  // 期日に応じたソート機能
+  const sortByDeadline = (sortOrder) => {
+    let sortedToDos = [...displayToDos]
+    sortedToDos.sort((a, b) => {
+      if (sortOrder === "asc") {
+        return new Date(a.deadline) - new Date(b.deadline)
+      } else {
+        return new Date(b.deadline) - new Date(a.deadline)
+      }
+    })
+    setToDos(sortedToDos)
+  }
+
+  // 作成日に応じたソート機能
+  const sortByDate = (sortOrder) => {
+    let sortedToDos = [...displayToDos]
+    sortedToDos.sort((a, b) => {
+      if (sortOrder === "asc") {
+        return new Date(a.createdAt) - new Date(b.createdAt)
+      } else {
+        return new Date(b.createdAt) - new Date(a.createdAt)
+      }
+    })
+    setToDos(sortedToDos)
+  }
+
   return (
     <div className="panel is-warning">
       <InputToDo onAdd={handleAdd} />
       <Filter onChange={handleFilterChange} value={filter} />
+      <div className="buttons">
+        <Button
+          variant="contained"
+          onClick={() => sortByDate("asc")}
+          className="button"
+        >
+          作成日(↑)
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => sortByDate("desc")}
+          className="button"
+        >
+          作成日(↓)
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => sortByDeadline("asc")}
+          className="button"
+        >
+          期日(↑)
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => sortByDeadline("desc")}
+          className="button"
+        >
+          期日(↓)
+        </Button>
+      </div>
       {displayToDos.map((todo) => (
         <ToDo key={todo.key} todo={todo} onCheck={handleCheck} />
       ))}

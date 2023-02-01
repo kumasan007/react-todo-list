@@ -24,7 +24,16 @@ export const ToDo = (props) => {
           "has-text-grey-light": todo.status === "DONE",
         })}
       >
-        <div className="todo-text" style={{ float: "left" }}>
+        <div
+          className="todo-text"
+          style={{
+            float: "left",
+            display: "block",
+            overflow: "hidden",
+            wordBreak: "break-all",
+            marginRight: "7rem",
+          }}
+        >
           {todo.text}
         </div>
         <div className="todo-deadline" style={{ float: "right" }}>
