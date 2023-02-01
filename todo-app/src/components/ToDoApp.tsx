@@ -117,7 +117,11 @@ export const ToDoApp = () => {
       {displayToDos.map((todo) => (
         <ToDo key={todo.key} todo={todo} onCheck={handleCheck} />
       ))}
-      <div className="panel-block">{displayToDos.length} つのタスク</div>
+      {displayToDos.length === 0 ? (
+        <div className="panel-block">タスクがありません</div>
+      ) : (
+        <div className="panel-block">{displayToDos.length} つのタスク</div>
+      )}
     </div>
   )
 }
