@@ -5,17 +5,29 @@ import Filter from "./Filter"
 import ToDo from "./ToDo"
 import { Button } from "@mui/material"
 import "./ToDoApp.css"
+import axios from "axios"
 // import { InputToDo, Filter, ToDo } from "./index"
 
-export const ToDoApp = () => {
+type ToDo = {
+  key: string
+  createdAt: Date
+  text: string
+  deadline: Date | undefined
+  status: "NOTSTARTED" | "INPROGRESS" | "DONE"
+  deadlineStatus: boolean
+}
+
+export const ToDoApp: React.FC = () => {
   const getKey = () => Math.random().toString(32).substring(2)
 
   // stateを作成
-  const [todos, setToDos] = useState([])
-  const [filter, setFilter] = useState("ALL")
+  const [todos, setToDos] = useState<ToDo[]>([])
+  const [filter, setFilter] = useState<
+    "ALL" | "NOTSTARTED" | "INPROGRESS" | "DONE" | "DEADLINE"
+  >("ALL")
 
   // 入力値をtodos(配列)に設定
-  const handleAdd = (text, deadline) => {
+  const handleAdd = (text: string, deadline: Date | undefined) => {
     setToDos([
       ...todos,
       {
@@ -24,26 +36,26 @@ export const ToDoApp = () => {
         text,
         deadline,
         status: "NOTSTARTED",
-        deadlineStatus: false,
+        deadlineStatus: Boolean(deadline),
       },
     ])
   }
 
   // フィルターの切り替え
-  const handleFilterChange = (value) => setFilter(value)
+  const handleFilterChange = (
+    value: "ALL" | "NOTSTARTED" | "INPROGRESS" | "DONE" | "DEADLINE"
+  ) => setFilter(value)
 
   // フィルターに応じたToDoを表示
   const displayToDos = todos.filter((todo) => {
-    if (todo.deadline) {
-      todo.deadlineStatus = true
-    }
     if (filter === "NOTSTARTED") return todo.status === "NOTSTARTED"
     if (filter === "DEADLINE") return todo.deadlineStatus === true
     if (filter === "INPROGRESS") return todo.status === "INPROGRESS"
     if (filter === "DONE") return todo.status === "DONE"
+    return true
   })
 
-  const handleCheck = (selected) => {
+  const handleCheck = (selected: ToDo) => {
     // チェックがついたToDoのstatusを変更
     const newToDos = todos.map((todo) => {
       if (todo.key === selected.key) {
@@ -56,7 +68,7 @@ export const ToDoApp = () => {
 
   // 期日に応じたソート機能
   const sortByDeadline = (sortOrder) => {
-    let sortedToDos = [...displayToDos]
+    let sortedToDos = [...todos]
     sortedToDos.sort((a, b) => {
       if (sortOrder === "asc") {
         return new Date(a.deadline) - new Date(b.deadline)
@@ -69,7 +81,7 @@ export const ToDoApp = () => {
 
   // 作成日に応じたソート機能
   const sortByDate = (sortOrder) => {
-    let sortedToDos = [...displayToDos]
+    let sortedToDos = [...todos]
     sortedToDos.sort((a, b) => {
       if (sortOrder === "asc") {
         return new Date(a.createdAt) - new Date(b.createdAt)
@@ -127,58 +139,3 @@ export const ToDoApp = () => {
 }
 
 export default ToDoApp
-
-// import React, { useState } from "react"
-// import "bulma/css/bulma.css"
-// import InputToDo from "./InputToDo"
-// import Filter from "./Filter"
-// import ToDo from "./ToDo"
-
-// export const ToDoApp: React.FC = () => {
-//   const getKey = () => Math.random().toString(32).substring(2)
-
-//   const [todos, setToDos] = useState<
-//     { key: string; text: string; done: boolean }[]
-//   >([])
-//   const [filter, setFilter] = useState<"ALL" | "TODO" | "DONE">("ALL")
-
-//   const handleAdd = (text: string) => {
-//     setToDos([...todos, { key: getKey(), text, done: false }])
-//   }
-
-//   const handleFilterChange = (value: string) =>
-//     setFilter(value as "ALL" | "TODO" | "DONE")
-
-//   const displayToDos = todos.filter((todo) => {
-//     if (filter === "ALL") return true
-//     if (filter === "TODO") return !todo.done
-//     if (filter === "DONE") return todo.done
-//   })
-
-//   const handleCheck = (checked: {
-//     key: string
-//     text: string
-//     done: boolean
-//   }) => {
-//     const newToDos = todos.map((todo) => {
-//       if (todo.key === checked.key) {
-//         todo.done = !todo.done
-//       }
-//       return todo
-//     })
-//     setToDos(newToDos)
-//   }
-
-//   return (
-//     <div className="panel is-warning">
-//       <InputToDo onAdd={handleAdd} />
-//       <Filter onChange={handleFilterChange} value={filter} />
-//       {displayToDos.map((todo) => (
-//         <ToDo key={todo.key} todo={todo} onCheck={handleCheck} />
-//       ))}
-//       <div className="panel-block">{displayToDos.length} つのタスク</div>
-//     </div>
-//   )
-// }
-
-// export default ToDoApp

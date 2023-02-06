@@ -10,6 +10,18 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import { Button, Stack } from "@mui/material"
 import "./InputToDo.css"
 dayjs.locale(ja)
+import axios from "axios"
+
+const header = axios.create({
+  baseURL: "http://192.168.201.166",
+  headers: {
+    accept: "application/json",
+    withCredentials: true,
+    "X-Requested-With": "XMLHttpRequest",
+    "Content-Type": "application/json",
+  },
+})
+
 export const InputToDo = (props) => {
   // stateを作成
   const [text, setText] = useState("")
@@ -23,6 +35,14 @@ export const InputToDo = (props) => {
     if (e.key === "Enter") {
       // 入力値が空白文字の場合終了
       if (!text.match(/\S/g)) return
+
+      const formData = {
+        title: text,
+        deadline: deadline,
+        status: 0,
+        user_id: 1,
+      }
+      header.post("/api/v1/tasks", formData)
       // ToDoAppクラスの「handleAdd」関数を実行
       props.onAdd(text, deadline)
       setText("")

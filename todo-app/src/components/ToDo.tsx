@@ -2,11 +2,20 @@ import classNames from "classnames"
 import "bulma/css/bulma.css"
 import "./ToDo.css"
 
-export const ToDo = (props) => {
+type Props = {
+  todo: {
+    status: string
+    text: string
+    deadline: Date
+  }
+  onCheck: (todo: { status: string; text: string; deadline: Date }) => void
+}
+
+export const ToDo: React.FC<Props> = (props) => {
   // state作成
   const { todo, onCheck } = props
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onCheck({ ...todo, status: event.target.value })
   }
 
