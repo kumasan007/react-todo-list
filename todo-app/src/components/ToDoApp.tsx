@@ -13,7 +13,7 @@ type ToDo = {
   createdAt: Date
   text: string
   deadline: Date | undefined
-  status: "NOTSTARTED" | "INPROGRESS" | "DONE"
+  status: "0" | "1" | "2"
   deadlineStatus: boolean
 }
 
@@ -22,9 +22,9 @@ export const ToDoApp: React.FC = () => {
 
   // stateを作成
   const [todos, setToDos] = useState<ToDo[]>([])
-  const [filter, setFilter] = useState<
-    "ALL" | "NOTSTARTED" | "INPROGRESS" | "DONE" | "DEADLINE"
-  >("ALL")
+  const [filter, setFilter] = useState<"ALL" | "0" | "1" | "2" | "DEADLINE">(
+    "ALL"
+  )
 
   // 入力値をtodos(配列)に設定
   const handleAdd = (text: string, deadline: Date | undefined) => {
@@ -35,23 +35,22 @@ export const ToDoApp: React.FC = () => {
         createdAt: new Date(),
         text,
         deadline,
-        status: "NOTSTARTED",
+        status: "0",
         deadlineStatus: Boolean(deadline),
       },
     ])
   }
 
   // フィルターの切り替え
-  const handleFilterChange = (
-    value: "ALL" | "NOTSTARTED" | "INPROGRESS" | "DONE" | "DEADLINE"
-  ) => setFilter(value)
+  const handleFilterChange = (value: "0" | "1" | "2" | "DEADLINE") =>
+    setFilter(value)
 
   // フィルターに応じたToDoを表示
   const displayToDos = todos.filter((todo) => {
-    if (filter === "NOTSTARTED") return todo.status === "NOTSTARTED"
+    if (filter === "0") return todo.status === "0"
     if (filter === "DEADLINE") return todo.deadlineStatus === true
-    if (filter === "INPROGRESS") return todo.status === "INPROGRESS"
-    if (filter === "DONE") return todo.status === "DONE"
+    if (filter === "1") return todo.status === "1"
+    if (filter === "2") return todo.status === "2"
     return true
   })
 

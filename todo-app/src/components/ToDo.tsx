@@ -23,14 +23,14 @@ export const ToDo: React.FC<Props> = (props) => {
     <label className="panel-block">
       <div className="select">
         <select value={todo.status} onChange={handleChange}>
-          <option value="NOTSTARTED">未着手</option>
-          <option value="INPROGRESS">着手中</option>
-          <option value="DONE">完了</option>
+          <option value="0">未着手</option>
+          <option value="1">着手中</option>
+          <option value="2">完了</option>
         </select>
       </div>
       <span
         className={classNames({
-          "has-text-grey-light": todo.status === "DONE",
+          "has-text-grey-light": todo.status === "2",
         })}
       >
         <div

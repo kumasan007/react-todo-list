@@ -39,8 +39,8 @@ export const InputToDo = (props) => {
       const formData = {
         title: text,
         deadline: deadline,
-        status: 0,
-        user_id: 1,
+        status: "0",
+        user_id: "1",
       }
       header.post("/api/v1/tasks", formData)
       // ToDoAppクラスの「handleAdd」関数を実行

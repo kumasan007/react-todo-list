@@ -22,8 +22,8 @@ export const Filter = (props) => {
       </a> */}
       <a
         href="#"
-        onClick={handleClick.bind(null, "NOTSTARTED")}
-        className={classNames({ "is-active": value === "NOTSTARTED" })}
+        onClick={handleClick.bind(null, "0")}
+        className={classNames({ "is-active": value === "0" })}
       >
         未着手
       </a>
@@ -36,15 +36,15 @@ export const Filter = (props) => {
       </a>
       <a
         href="#"
-        onClick={handleClick.bind(null, "INPROGRESS")}
-        className={classNames({ "is-active": value === "INPROGRESS" })}
+        onClick={handleClick.bind(null, "1")}
+        className={classNames({ "is-active": value === "1" })}
       >
         着手中
       </a>
       <a
         href="#"
-        onClick={handleClick.bind(null, "DONE")}
-        className={classNames({ "is-active": value === "DONE" })}
+        onClick={handleClick.bind(null, "2")}
+        className={classNames({ "is-active": value === "2" })}
       >
         完了
       </a>
