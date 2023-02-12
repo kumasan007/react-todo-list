@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  todo-app:
+    build:
+      context: .
+    tty: true
+    volumes:
+      - ./todo-app:/src/todo-app
+    working_dir: /src/todo-app
+    command: ["npm", "run", "dev"]
+    ports:
+      - 5173:5173

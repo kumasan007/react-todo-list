@@ -12,15 +12,15 @@ import "./InputToDo.css"
 dayjs.locale(ja)
 import axios from "axios"
 
-const header = axios.create({
-  baseURL: "http://192.168.201.166",
-  headers: {
-    accept: "application/json",
-    withCredentials: true,
-    "X-Requested-With": "XMLHttpRequest",
-    "Content-Type": "application/json",
-  },
-})
+// const header = axios.create({
+//   baseURL: "http://192.168.201.166",
+//   headers: {
+//     accept: "application/json",
+//     withCredentials: true,
+//     "X-Requested-With": "XMLHttpRequest",
+//     "Content-Type": "application/json",
+//   },
+// })
 
 export const InputToDo = (props) => {
   // stateを作成
@@ -42,7 +42,7 @@ export const InputToDo = (props) => {
         status: "0",
         user_id: "1",
       }
-      header.post("/api/v1/tasks", formData)
+      // header.post("/api/v1/tasks", formData)
       // ToDoAppクラスの「handleAdd」関数を実行
       props.onAdd(text, deadline)
       setText("")

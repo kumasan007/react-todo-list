@@ -91,6 +91,21 @@ export const ToDoApp: React.FC = () => {
     setToDos(sortedToDos)
   }
 
+  const handleEdit = (todo: {
+    status: string
+    text: string
+    deadline: Date
+  }) => {
+    setToDos((prevTodos) =>
+      prevTodos.map((t) => {
+        if (t.text === todo.text) {
+          return { ...t, text: todo.text }
+        }
+        return t
+      })
+    )
+  }
+
   return (
     <div className="panel is-warning">
       <InputToDo onAdd={handleAdd} />
@@ -126,7 +141,12 @@ export const ToDoApp: React.FC = () => {
         </Button>
       </div>
       {displayToDos.map((todo) => (
-        <ToDo key={todo.key} todo={todo} onCheck={handleCheck} />
+        <ToDo
+          key={todo.key}
+          todo={todo}
+          onCheck={handleCheck}
+          onEdit={handleEdit}
+        />
       ))}
       {displayToDos.length === 0 ? (
         <div className="panel-block">タスクがありません</div>

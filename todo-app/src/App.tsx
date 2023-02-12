@@ -11,8 +11,8 @@ const App = () => {
     <>
       <Header />
       <ToDoApp />
-      <Login />
-      <Register />
+      {/* <Login />
+      <Register /> */}
     </>
   )
 }
