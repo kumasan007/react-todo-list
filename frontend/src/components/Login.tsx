@@ -84,7 +84,7 @@ export const Login = (): JSX.Element => {
                 type="submit"
                 variant="contained"
                 fullWidth
-                sx={{ mt: "1rem" }}
+                sx={{ mt: "1rem", mb: "1rem" }}
               >
                 ログイン
               </LoadingButton>
@@ -94,10 +94,9 @@ export const Login = (): JSX.Element => {
                 </span>
               )}
             </form>
-            <br />
-            <br />
+
             <Typography>
-              <Link to="/register">新規登録はこちら</Link>
+              <Link to="/register">新規登録</Link>
             </Typography>
           </Stack>
         </Paper>

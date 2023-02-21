@@ -341,7 +341,6 @@ export const ToDo = () => {
             </Box>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <Button
-                sx={{ height: "50px" }}
                 type="submit"
                 variant="contained"
                 sx={{ width: "150px" }}

@@ -162,9 +162,9 @@ export const Register = (): JSX.Element => {
                 loading={loading}
                 variant="contained"
                 fullWidth
-                sx={{ mt: "1rem" }}
+                sx={{ mt: "1rem", mb: "1rem" }}
               >
-                アカウントを作成する
+                登録
               </LoadingButton>
               {errors.submit && (
                 <span className="block text-red-400">
@@ -172,10 +172,9 @@ export const Register = (): JSX.Element => {
                 </span>
               )}
             </form>
-            <br />
-            <br />
+
             <Typography>
-              <Link to="/login">登録済みの方はこちら</Link>
+              <Link to="/login">ログイン</Link>
             </Typography>
           </Stack>
         </Paper>
