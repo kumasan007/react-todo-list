@@ -1,12 +1,13 @@
-version: "3.8"
+version: "3.9"
 services:
-  todo-app:
+  graduation-f-node:
     build:
       context: .
-    tty: true
     volumes:
-      - ./todo-app:/src/todo-app
-    working_dir: /src/todo-app
-    command: ["npm", "run", "dev"]
+      - type: bind
+        source: ./src
+        target: /data
+    tty: true
+    command: sh -c 'npm install --save --legacy-peer-deps && npm run dev'
     ports:
-      - 5173:5173
+      - "3000:5173"

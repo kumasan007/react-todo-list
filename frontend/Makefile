@@ -1,11 +1,4 @@
 build:
-	docker compose build
-	docker compose run --rm todo-app npm install
-
-
-up:
+	docker compose build --build-arg UID=`id -u` --build-arg GID=`id -g` --no-cache
 	docker compose up -d
-
-down:
-	docker compose down 
-	
+	cp src/.env.example src/.env
