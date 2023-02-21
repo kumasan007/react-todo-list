@@ -10,7 +10,7 @@ class Authenticate extends Middleware
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return string|null
      */
     protected function redirectTo($request)
@@ -20,24 +20,22 @@ class Authenticate extends Middleware
         }
     }
 
-
-    // 認証失敗したときのメッセージ設定（仮）
-    // /**
-    //  * Handle an unauthenticated user.
-    //  *
-    //  * @param \Illuminate\Http\Request $request request
-    //  * @param array                    $guards  guard
-    //  *
-    //  * @return void
-    //  *
-    //  * @throws \Illuminate\Auth\AuthenticationException
-    //  */
-    // protected function unauthenticated($request, array $guards)
-    // {
-    //     throw new AuthenticationException(
-    //         '認証に失敗しました。ログインをやり直してください。',
-    //         $guards,
-    //         $this->redirectTo($request)
-    //     );
-    // }
+    /**
+     * Handle an unauthenticated user.
+     *
+     * @param \Illuminate\Http\Request $request リクエスト.
+     * @param array                    $guards  ガード.
+     *
+     * @return void
+     *
+     * @throws \Illuminate\Auth\AuthenticationException
+     */
+    protected function unauthenticated($request, array $guards)
+    {
+        throw new AuthenticationException(
+            'Unauthenticated.',
+            $guards,
+            $this->redirectTo($request)
+        );
+    }
 }

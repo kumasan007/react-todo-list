@@ -2,13 +2,14 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-// 追加
 use App\Models\Task;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use DateTime;
 
-class TasksTableSeeder extends Seeder
+class TaskSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,8 +18,6 @@ class TasksTableSeeder extends Seeder
      */
     public function run()
     {
-        // ユーザーIDも挿入
-        Task::factory(3)->create(['user_id' => 1]);
-        // Task::factory(3)->create();
+        Task::factory()->count(5)->create();
     }
 }

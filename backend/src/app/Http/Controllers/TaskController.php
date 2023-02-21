@@ -2,141 +2,126 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use App\Models\User;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\CreateTask;
+use App\Http\Requests\EditTask;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     /**
-     * App\Http\Middleware\JpJsonResponseを読み込む
-     */
-    public function __construct()
-    {
-        $this->middleware('JpJsonResponse');
-    }
-
-    /**
-     * タスク一覧を表示する
+     * Display a listing of the resource.
      *
-     * @return json JSON形式で返す
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $loginUserId = Auth::id();
-        $loginUserTasks = Task::where('user_id', $loginUserId)->get();
+        $tasks = Task::where('user_id', Auth::id())->get();
 
-        if (!$loginUserTasks) {
-            return response()->json('タスクはありません。', 404);
-        }
-
-        return response()->json($loginUserTasks, 200);
+        return response()->json($tasks, 200);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\CreateTask $request フォームのリクエストの内容.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function store(CreateTask $request)
     {
-        // 使用しない
+        $request->merge(['user_id' => Auth::id()]);
+
+        $task = new Task();
+        $createdTask = $task->create($request->restriction());
+
+        return response()->json(['message' => 'The post was successful.', 'task' => $createdTask], 200);
     }
 
     /**
-     * タスクを作成・保存する
+     * Display the specified resource.
      *
-     * @param  use App\Http\Requests\TaskRequest $request
-     * @return json JSON形式で返す
-     */
-    public function store(TaskRequest $request)
-    {
-        $newTask = new Task();
-        $newTask = Auth::user()->tasks()->create([
-            'title' => $request->input('title'),
-            'deadline' => $request->input('deadline'),
-            'status' => $request->input('status'),
-            'user_id' => Auth::id()
-        ]);
-
-        return response()->json(['タスクを作成しました', $newTask], 200);
-    }
-
-    /**
-     * 特定のタスク一つを表示する
+     * @param integer $id タスクのid.
      *
-     * @param  integer $id
-     * @return json JSON形式で返す
-     */
-    public function show($id)
-    {
-        // 使用しない
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function show(int $id)
     {
-        // 使用しない
+        $task = Task::find($id);
+        if (!$task) {
+            return response()->json(['message' => 'Task not found.'], 404);
+        }
+        if (Auth::id() != $task->user_id) {
+            return response()->json(['message' => 'No access authorisation.'], 403);
+        }
+
+        return response()->json($task, 200);
     }
 
     /**
-     * タスクを編集・更新する
+     * Update the specified resource in storage.
      *
-     * @param  use Illuminate\Http\Request $request
-     * @param  int  $id
-     * @return json JSON形式で返す
+     * @param \Illuminate\Http\EditTask $request フォームのリクエストの内容.
+     * @param integer                   $id      タスクのid.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditTask $request, int $id)
     {
         $task = Task::find($id);
-
         if (!$task) {
-            return response()->json('該当タスクがありません', 404);
+            return response()->json(['message' => 'Task not found.'], 404);
+        }
+        if (Auth::id() != $task->user_id) {
+            return response()->json(['message' => 'No access authorisation.'], 403);
         }
 
-        if (!Gate::allows('update-task', $task)) {
-            return response()->json('編集権限がありません。', 403);
-        }
+        $task->update($request->restriction());
+        $updatedTask = Task::find($id);
 
-        $task->title = $request->input('title');
-        $task->deadline = $request->input('deadline');
-        $task->status = $request->input('status');
-
-        $task->update();
-
-        return response()->json(['更新しました', $task], 200);
+        return response()->json(['message' => 'The update was successful.', 'task' => $updatedTask], 200);
     }
 
     /**
-     * タスクを削除する
+     * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return json JSON形式で返す
+     * @param integer $id タスクのid.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $task = Task::find($id);
-
         if (!$task) {
-            return response()->json('該当タスクがありません', 404);
+            return response()->json(['message' => 'Task not found.'], 404);
         }
-
-        if (! Gate::allows('update-task', $task)) {
-            return response()->json('権限がありません', 403);
+        if (Auth::id() != $task->user_id) {
+            return response()->json(['message' => 'No access authorisation.'], 403);
         }
+        Task::destroy($id);
 
-        $task->delete();
+        return response()->json(['message' => 'The delete was successful.'], 200);
+    }
 
-        return response()->json(['タスクを削除しました', $task], 200);
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function returnNotFound()
+    {
+        return response()->json(['message' => 'This URL does not exist.'], 404);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function returnNotAllowed()
+    {
+        return response()->json(['message' => 'This HTTP method is not allowed.'], 405);
     }
 }

@@ -3,90 +3,70 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Exception;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use \Symfony\Component\HttpFoundation\Response;
+use App\Models\User;
+use App\Http\Requests\ApiRegisterUser;
 
 class ApiAuthController extends Controller
 {
-    /**
-     * App\Http\Middleware\JpJsonResponseを読み込む
-     */
-    public function __construct()
+        /**
+         * Display a listing of the resource.
+         *
+         * @param App\Http\Requests\ApiRegisterUser $request 登録内容.
+         *
+         * @return \Illuminate\Http\Response
+         */
+    public function register(ApiRegisterUser $request)
     {
-        $this->middleware('JpJsonResponse');
+        $user = new User();
+
+        $request->merge(["password" => Hash::make($request->password)]);
+
+        $user->create($request->dbColumnsRestriction());
+
+        $registeredUser = User::orderBy('created_at', 'DESC')->first();
+
+        return response()->json(['message' => 'Registered correctly', 'user_info' => $registeredUser], 200);
     }
 
     /**
-     * ユーザの新規登録
+     * Display a listing of the resource.
      *
-     * @param Request $request 登録するユーザ情報
+     * @param \Illuminate\Http\Request　 $request ログインに必要な情報.
      *
-     * @return json ユーザ登録の成否
-     */
-    public function register(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->messages(), 400);
-        }
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        return response()->json(['ユーザー登録が完了しました', $user], 200);
-    }
-
-    /**
-     * ログイン
-     *
-     * SPA方式
-     *
-     * @param  Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = User::where('email', $request->email)->firstOrFail();
             $request->session()->regenerate();
-
-            return response()->json(['ログインしました', Auth::user()], 200);
+            $token = $user->createToken($user->id)->plainTextToken;
+            return response()->json(['message' => 'You are logged in.', 'token' => $token], 200);
+        } else {
+            return response()->json(['message' => 'Authentication failed.'], 403);
         }
-
-        return response()->json('ログインに失敗しました', 401);
     }
 
     /**
-     * ログアウト
+     * Display a listing of the resource.
      *
-     * SPA方式
+     * @param \Illuminate\Http\Request　 $request ログインしているユーザーの情報.
      *
-     * @param  Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Logout failed'], 401);
+        }
+        if (method_exists(auth()->user()->currentAccessToken(), 'delete')) {
+            auth()->user()->currentAccessToken()->delete();
+        } else {
+            session()->invalidate();
+        }
 
-        return response()->json('ログアウトしました', 200);
+        return response()->json(['message' => 'You are logged out.'], 200);
     }
 }

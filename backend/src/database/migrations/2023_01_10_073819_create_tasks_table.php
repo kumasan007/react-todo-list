@@ -15,14 +15,12 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 50);
-            $table->longText('body')->nullable();
-            $table->datetime('deadline')->nullable();
+            $table->string('title');
+            $table->foreignId('user_id')->constrained();
             $table->datetime('created_at');
             $table->datetime('updated_at');
-            $table->integer('status');
-            // 後で追加
-            // $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->date('deadline')->nullable();
+            $table->enum('status', ['todo', 'doing', 'done']);
         });
     }
 
