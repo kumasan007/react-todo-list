@@ -1,21 +1,19 @@
 import React, { useState } from "react"
+import ReactDOM from "react-dom"
 import { Link } from "react-router-dom"
 import axios from "axios"
 import { useForm } from "react-hook-form"
 import TextField from "@mui/material/TextField"
 import { LoadingButton } from "@mui/lab"
 import { useHistory } from "react-router"
-import ReactDOM from "react-dom"
-import { useAuth } from "./Auth"
 import { Grid, Paper, Stack, Typography } from "@mui/material"
+import { useAuth } from "./Auth"
+import { LoginData } from "./LoginData"
 
-interface LoginData {
-  email: string
-  password: string
-  submit: any
-}
-
-export const Login = (): JSX.Element => {
+const Login = (): JSX.Element => {
+  const auth = useAuth()
+  const history = useHistory()
+  const [loading, setLoading] = useState(false)
   const {
     register,
     handleSubmit,
@@ -23,9 +21,6 @@ export const Login = (): JSX.Element => {
     setError,
     formState: { errors },
   } = useForm<LoginData>()
-  const [loading, setLoading] = useState(false)
-  const auth = useAuth()
-  const history = useHistory()
 
   const onSubmit = (data: LoginData) => {
     setLoading(true)
@@ -94,9 +89,10 @@ export const Login = (): JSX.Element => {
                 </span>
               )}
             </form>
-
             <Typography>
-              <Link to="/register">新規登録</Link>
+              <Link to="/register" style={{ textDecoration: "none" }}>
+                新規登録
+              </Link>
             </Typography>
           </Stack>
         </Paper>
@@ -104,6 +100,8 @@ export const Login = (): JSX.Element => {
     </>
   )
 }
+
+export const Login = Login
 
 if (document.getElementById("login")) {
   ReactDOM.render(<Login />, document.getElementById("login"))

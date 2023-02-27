@@ -1,12 +1,12 @@
-import { Header } from "./Header"
-import { ToDo } from "./ToDo"
-import { Register } from "./Register"
-import { Login } from "./Login"
-import React from "react"
-import { createRoot } from "react-dom/client"
-import { BrowserRouter, Switch } from "react-router-dom"
-import ProvideAuth, { PrivateRoute, PublicRoute, LogoutButton } from "./Auth"
-import CssBaseline from "@mui/material/CssBaseline"
+import { Header } from "./Header";
+import { ToDo } from "./ToDo";
+import { Register } from "./Register";
+import { Login } from "./Login";
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Switch } from "react-router-dom";
+import ProvideAuth, { PrivateRoute, PublicRoute, LogoutButton } from "./Auth";
+import CssBaseline from "@mui/material/CssBaseline";
 
 export const App = (): JSX.Element => {
   return (
@@ -30,9 +30,9 @@ export const App = (): JSX.Element => {
         </BrowserRouter>
       </ProvideAuth>
     </>
-  )
-}
+  );
+};
 
-const container = document.getElementById("app")
-const app = createRoot(container)
-app.render(<App />)
+const container = document.getElementById("app");
+const app = createRoot(container);
+app.render(<App />);

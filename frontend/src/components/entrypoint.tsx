@@ -1,2 +1,2 @@
-import "./library"
-import "./App.tsx"
+import "./library";
+import "./App.tsx";

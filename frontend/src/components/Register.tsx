@@ -174,7 +174,9 @@ export const Register = (): JSX.Element => {
             </form>
 
             <Typography>
-              <Link to="/login">ログイン</Link>
+              <Link to="/login" style={{ textDecoration: "none" }}>
+                ログイン
+              </Link>
             </Typography>
           </Stack>
         </Paper>
