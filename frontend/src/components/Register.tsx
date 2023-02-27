@@ -1,51 +1,52 @@
 import React, { useState } from "react"
+import ReactDOM from "react-dom"
 import { Link } from "react-router-dom"
 import axios from "axios"
 import { useForm } from "react-hook-form"
+import { useHistory } from "react-router-dom"
+import { useAuth } from "./Auth"
 import TextField from "@mui/material/TextField"
 import { LoadingButton } from "@mui/lab"
-import { useHistory } from "react-router-dom"
-import ReactDOM from "react-dom"
-import { useAuth } from "./Auth"
 import { Grid, Paper, Stack, Typography } from "@mui/material"
 
 interface EmailAndPasswordData {
-  name: string
-  email: string
-  password: string
-  password_confirmation: string
-  submit: any
+name: string
+email: string
+password: string
+password_confirmation: string
+submit: any
 }
 
 export const Register = (): JSX.Element => {
-  const {
-    register,
-    handleSubmit,
-    clearErrors,
-    setError,
-    formState: { errors },
-  } = useForm<EmailAndPasswordData>()
-  const [loading, setLoading] = useState(false)
-  const auth = useAuth()
-  const history = useHistory()
+const auth = useAuth()
+const history = useHistory()
+const {
+register,
+handleSubmit,
+clearErrors,
+setError,
+formState: { errors },
+} = useForm<EmailAndPasswordData>()
+const [loading, setLoading] = useState(false)
 
-  const onSubmit = (data: EmailAndPasswordData) => {
-    setLoading(true)
-    axios.get("/sanctum/csrf-cookie").then(() => {
-      auth
-        ?.register(data)
-        .then(() => {
-          history.push("")
-        })
-        .catch((error) => {
-          setError("submit", {
-            type: "manual",
-            message: "このアドレスは使用済みです。",
-          })
-          setLoading(false)
-        })
-    })
-  }
+const onSubmit = (data: EmailAndPasswordData) => {
+setLoading(true)
+axios.get("/sanctum/csrf-cookie").then(() => {
+auth
+?.register(data)
+.then(() => {
+history.push("")
+})
+.catch((error) => {
+setError("submit", {
+type: "manual",
+message: "このアドレスは使用済みです。",
+})
+setLoading(false)
+})
+})
+}
+}
 
   return (
     <>

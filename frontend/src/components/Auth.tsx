@@ -4,76 +4,76 @@ import React, {
   useState,
   ReactNode,
   useEffect,
-} from "react";
-import { Route, Redirect, useHistory } from "react-router-dom";
-import { LoadingButton } from "@mui/lab";
-import { CircularProgress } from "@mui/material";
-import { useForm } from "react-hook-form";
-import axios from "axios";
+} from "react"
+import { Route, Redirect, useHistory } from "react-router-dom"
+import { LoadingButton } from "@mui/lab"
+import { CircularProgress } from "@mui/material"
+import { useForm } from "react-hook-form"
+import axios from "axios"
 
 interface LoginData {
-  email: string;
-  password: string;
-  submit: any;
+  email: string
+  password: string
+  submit: any
 }
 
 interface RegisterData {
-  email: string;
-  password: string;
-  password_confirmation: string;
+  email: string
+  password: string
+  password_confirmation: string
 }
 
 interface authProps {
-  isLogin: boolean;
-  isLoading: boolean;
-  resetIsLogin: () => void;
-  register: (registerData: RegisterData) => Promise<void>;
-  login: (loginData: LoginData) => Promise<void>;
-  logout: () => Promise<void>;
+  isLogin: boolean
+  isLoading: boolean
+  resetIsLogin: () => void
+  register: (registerData: RegisterData) => Promise<void>
+  login: (loginData: LoginData) => Promise<void>
+  logout: () => Promise<void>
 }
 
 interface Props {
-  children: ReactNode;
+  children: ReactNode
 }
 
 interface RouteProps {
-  children: ReactNode;
-  path: string;
-  exact?: boolean;
+  children: ReactNode
+  path: string
+  exact?: boolean
 }
 
 interface From {
-  from: Location;
+  from: Location
 }
 
-const authContext = createContext<authProps | null>(null);
+const authContext = createContext<authProps | null>(null)
 
 const ProvideAuth = ({ children }: Props) => {
-  const auth = useProvideAuth();
-  return <authContext.Provider value={auth}>{children}</authContext.Provider>;
-};
-export default ProvideAuth;
+  const auth = useProvideAuth()
+  return <authContext.Provider value={auth}>{children}</authContext.Provider>
+}
+export default ProvideAuth
 
 export const useAuth = () => {
-  return useContext(authContext);
-};
+  return useContext(authContext)
+}
 
 const useProvideAuth = () => {
-  const [isLogin, setIsLogin] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { setError } = useForm<LoginData>();
-  const resetIsLogin = () => setIsLogin(false);
+  const [isLogin, setIsLogin] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const { setError } = useForm<LoginData>()
+  const resetIsLogin = () => setIsLogin(false)
 
   const login = async (loginData: LoginData) => {
     try {
       await axios.post("/api/login", loginData).then((res) => {
-        setIsLogin(true);
-        setIsLoading(false);
-      });
+        setIsLogin(true)
+        setIsLoading(false)
+      })
     } catch (error) {
-      throw error;
+      throw error
     }
-  };
+  }
 
   const register = (registerData: RegisterData) => {
     return axios
@@ -82,41 +82,41 @@ const useProvideAuth = () => {
         login({
           email: registerData.email,
           password: registerData.password,
-        } as LoginData);
+        } as LoginData)
       })
       .catch((error) => {
-        throw error;
-      });
-  };
+        throw error
+      })
+  }
 
   const logout = async () => {
     try {
-      await axios.delete("/api/logout");
-      setIsLogin(false);
-      setIsLoading(false);
+      await axios.delete("/api/logout")
+      setIsLogin(false)
+      setIsLoading(false)
     } catch (error) {
-      throw error;
+      throw error
     }
-  };
+  }
 
   useEffect(() => {
-    (async () => {
-      setIsLoading(true);
+    ;(async () => {
+      setIsLoading(true)
       try {
-        const res = await axios.get("/api/tasks").then((res) => res.status);
-        setIsLogin(res === 200 ? true : false);
+        const res = await axios.get("/api/tasks").then((res) => res.status)
+        setIsLogin(res === 200 ? true : false)
       } catch (error) {
-        setIsLogin(false);
+        setIsLogin(false)
       }
-      setIsLoading(false);
-    })();
-  }, []);
+      setIsLoading(false)
+    })()
+  }, [])
 
-  return { isLogin, isLoading, resetIsLogin, register, login, logout };
-};
+  return { isLogin, isLoading, resetIsLogin, register, login, logout }
+}
 
 export const PrivateRoute = ({ children, path, exact = false }: RouteProps) => {
-  const auth = useAuth();
+  const auth = useAuth()
 
   return (
     <>
@@ -137,24 +137,24 @@ export const PrivateRoute = ({ children, path, exact = false }: RouteProps) => {
           exact={exact}
           render={({ location }) => {
             if (auth?.isLogin) {
-              return children;
+              return children
             } else {
               return (
                 <Redirect
                   to={{ pathname: "/login", state: { from: location } }}
                 />
-              );
+              )
             }
           }}
         />
       )}
     </>
-  );
-};
+  )
+}
 
 export const PublicRoute = ({ children, path, exact = false }: RouteProps) => {
-  const auth = useAuth();
-  const history = useHistory();
+  const auth = useAuth()
+  const history = useHistory()
 
   return (
     <>
@@ -184,26 +184,26 @@ export const PublicRoute = ({ children, path, exact = false }: RouteProps) => {
                     state: { from: location },
                   }}
                 />
-              );
+              )
             } else {
-              return children;
+              return children
             }
           }}
         />
       )}
     </>
-  );
-};
+  )
+}
 
 export const LogoutButton = () => {
-  const auth = useAuth();
-  const [loading, setLoading] = useState<boolean>(false);
+  const auth = useAuth()
+  const [loading, setLoading] = useState<boolean>(false)
 
   const logout = () => {
-    setLoading(true);
-    auth?.logout();
-    setLoading(false);
-  };
+    setLoading(true)
+    auth?.logout()
+    setLoading(false)
+  }
 
   return (
     <div
@@ -234,5 +234,5 @@ export const LogoutButton = () => {
         ログアウト
       </LoadingButton>
     </div>
-  );
-};
+  )
+}
