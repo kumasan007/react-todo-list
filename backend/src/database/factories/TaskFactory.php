@@ -3,8 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
-use DateTime;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Task>
@@ -19,11 +17,13 @@ class TaskFactory extends Factory
     public function definition()
     {
         return [
-            'title' => Str::random(10),
-            'user_id' => 1,
-            'status' => 'todo',
-            'created_at' => new DateTime(),
-            'updated_at' => new DateTime(),
+            // 'title' => $this->faker->name(),
+            'title' => $this->faker->realText(20),
+            // 'body' => $this->faker->realText(120),
+            'deadline' => $this->faker->dateTimeBetween($startDate = 'now', $endDate = '+2 week'),
+            'created_at' => now(),
+            'updated_at' => now(),
+            'status' => $this->faker->randomElement($array=[1,2,3])
         ];
     }
 }
